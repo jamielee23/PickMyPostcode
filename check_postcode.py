@@ -3,8 +3,8 @@ import os, re, time, sys
 from typing import List, Tuple
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
-POSTCODE = os.getenv("POSTCODE", "GL51 8LS").strip()
-POSTCODE_RE = re.compile(r"\bGL51\s?8LS\b", re.IGNORECASE)
+POSTCODE = os.getenv("POSTCODE", "RH10 4QA").strip()
+POSTCODE_RE = re.compile(r"\bRH10\s?4QA\b", re.IGNORECASE)
 
 URLS = [
     "https://pickmypostcode.com/",
