@@ -2,7 +2,7 @@ name: Daily postcode check
 
 on:
   schedule:
-    # Runs daily at 07:10 UTC (08:10 BST typically)
+    # GitHub Actions uses UTC. This runs at 07:10 UTC daily (~08:10 UK during BST).
     - cron: "10 7 * * *"
   workflow_dispatch: {}
 
@@ -20,9 +20,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install playwright==1.47.0
           playwright install --with-deps chromium
-      - name: Run postcode check
+      - name: Run postcode check (emails Jamie on matches)
         env:
           POSTCODE: GL51 8LS
+
+          # --- Email (Outlook/Hotmail defaults) ---
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}           # e.g. smtp.office365.com
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}           # e.g. 587
+          SMTP_USER: ${{ secrets.SMTP_USER }}           # typically your Hotmail address
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}           # app password or SMTP auth password
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}         # e.g. jamie.lee.23@hotmail.com
+          EMAIL_TO: jamie.lee.23@hotmail.com            # defaults in code; explicit here for clarity
+          # EMAIL_ALWAYS: "1"                           # uncomment if you want daily emails even with no match
+
+          # --- Slack (optional) ---
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           python check_postcode.py
